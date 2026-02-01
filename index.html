@@ -12,8 +12,8 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            background: #000000;
             min-height: 100vh;
             padding: 20px;
         }
@@ -62,10 +62,22 @@
             margin-bottom: 10px;
         }
         
+        .category-card svg {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 15px;
+            stroke: #333;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        
         .category-card .title {
             font-size: 18px;
             font-weight: 600;
             color: #333;
+            font-family: Georgia, 'Times New Roman', Times, serif;
         }
         
         /* Form ordine */
@@ -212,26 +224,58 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🍰 Ordini Pasticceria</h1>
+            <h1>Ordini Pasticceria</h1>
             <p>Seleziona una categoria per iniziare</p>
         </div>
         
         <!-- Cards Categorie -->
         <div class="categories" id="categories">
             <div class="category-card" onclick="selectCategory('torte')">
-                <div class="icon">🎂</div>
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"></path>
+                    <path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"></path>
+                    <path d="M2 21h20"></path>
+                    <path d="M7 8v3"></path>
+                    <path d="M12 8v3"></path>
+                    <path d="M17 8v3"></path>
+                    <path d="M7 4h.01"></path>
+                    <path d="M12 4h.01"></path>
+                    <path d="M17 4h.01"></path>
+                </svg>
                 <div class="title">Torte</div>
             </div>
             <div class="category-card" onclick="selectCategory('pasticceria')">
-                <div class="icon">🥐</div>
+                <svg viewBox="0 0 24 24">
+                    <path d="M17 21v-2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1z"></path>
+                    <path d="M9 21v-2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1z"></path>
+                    <path d="M7 8h10"></path>
+                    <path d="M7.5 12h9"></path>
+                    <path d="M8 16h8"></path>
+                    <path d="M9 3h6l2 5H7l2-5z"></path>
+                </svg>
                 <div class="title">Pasticceria</div>
             </div>
             <div class="category-card" onclick="selectCategory('colazione')">
-                <div class="icon">☕</div>
+                <svg viewBox="0 0 24 24">
+                    <path d="M17 8h1a4 4 0 1 1 0 8h-1"></path>
+                    <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"></path>
+                    <line x1="6" x2="6" y1="2" y2="4"></line>
+                    <line x1="10" x2="10" y1="2" y2="4"></line>
+                    <line x1="14" x2="14" y1="2" y2="4"></line>
+                </svg>
                 <div class="title">Colazione</div>
             </div>
             <div class="category-card" onclick="selectCategory('rosticceria')">
-                <div class="icon">🥖</div>
+                <svg viewBox="0 0 24 24">
+                    <path d="M6.002 5h12"></path>
+                    <path d="M6 9h12"></path>
+                    <path d="m7.5 4.5 1.5 1.5"></path>
+                    <path d="m15 6 1.5-1.5"></path>
+                    <path d="M6 13h12"></path>
+                    <path d="M6.002 5 4 13h16l-2.002-8"></path>
+                    <circle cx="12" cy="15" r="2"></circle>
+                    <path d="M12 17v5"></path>
+                </svg>
                 <div class="title">Rosticceria</div>
             </div>
         </div>
@@ -239,7 +283,7 @@
         <!-- Form Torte -->
         <div class="order-form" id="form-torte">
             <div class="form-header">
-                <h2>🎂 Ordine Torta</h2>
+                <h2>Ordine Torta</h2>
                 <button class="back-btn" onclick="goBack()">← Indietro</button>
             </div>
             
@@ -310,6 +354,11 @@
                     <input type="text" id="scritta" placeholder="es. Buon Compleanno Maria">
                 </div>
                 
+                <div class="form-group">
+                    <label for="operatore">Operatore *</label>
+                    <input type="text" id="operatore" placeholder="Nome operatore" required>
+                </div>
+                
                 <button type="submit" class="submit-btn">
                     <span class="whatsapp-icon">📱</span>
                     Invia Ordine
@@ -324,7 +373,7 @@
         <!-- Form Pasticceria (placeholder) -->
         <div class="order-form" id="form-pasticceria">
             <div class="form-header">
-                <h2>🥐 Ordine Pasticceria</h2>
+                <h2>Ordine Pasticceria</h2>
                 <button class="back-btn" onclick="goBack()">← Indietro</button>
             </div>
             <p style="text-align: center; color: #666; padding: 40px;">In fase di sviluppo...</p>
@@ -333,7 +382,7 @@
         <!-- Form Colazione (placeholder) -->
         <div class="order-form" id="form-colazione">
             <div class="form-header">
-                <h2>☕ Ordine Colazione</h2>
+                <h2>Ordine Colazione</h2>
                 <button class="back-btn" onclick="goBack()">← Indietro</button>
             </div>
             <p style="text-align: center; color: #666; padding: 40px;">In fase di sviluppo...</p>
@@ -342,7 +391,7 @@
         <!-- Form Rosticceria (placeholder) -->
         <div class="order-form" id="form-rosticceria">
             <div class="form-header">
-                <h2>🥖 Ordine Rosticceria</h2>
+                <h2>Ordine Rosticceria</h2>
                 <button class="back-btn" onclick="goBack()">← Indietro</button>
             </div>
             <p style="text-align: center; color: #666; padding: 40px;">In fase di sviluppo...</p>
@@ -350,6 +399,9 @@
     </div>
     
     <script>
+        // URL del Google Apps Script Web App (lo configureremo dopo)
+        const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_SCRIPT_URL_HERE';
+        
         let currentCategory = '';
         
         function selectCategory(category) {
@@ -416,6 +468,7 @@
             const tipoTorta = document.getElementById('tipoTorta').value;
             const colore = document.getElementById('colore').value;
             const scritta = document.getElementById('scritta').value;
+            const operatore = document.getElementById('operatore').value;
             
             // Gestione campi condizionali
             let bagna = '';
@@ -430,17 +483,41 @@
                 specifica = document.getElementById('specifica').value;
             }
             
-            // Formatta data in italiano
+            // Formatta data in italiano con giorno della settimana
             const dataObj = new Date(data);
+            const giornoSettimana = dataObj.toLocaleDateString('it-IT', { weekday: 'long' });
             const dataFormattata = dataObj.toLocaleDateString('it-IT', {
                 day: '2-digit',
                 month: '2-digit',
                 year: 'numeric'
             });
             
+            // Capitalizza prima lettera del giorno
+            const giornoCapitalizzato = giornoSettimana.charAt(0).toUpperCase() + giornoSettimana.slice(1);
+            
+            // Salva nel Google Sheet
+            const orderData = {
+                timestamp: new Date().toLocaleString('it-IT'),
+                categoria: 'Torte',
+                data: dataFormattata,
+                nome: nome,
+                cognome: cognome,
+                telefono: telefono,
+                peso: peso,
+                tipoTorta: tipoTorta,
+                bagna: bagna,
+                specifica: specifica,
+                colore: colore,
+                scritta: scritta,
+                operatore: operatore
+            };
+            
+            // Salva nel Google Sheet
+            saveToGoogleSheet(orderData);
+            
             // Crea messaggio WhatsApp
-            let messaggio = `🎂 *ORDINE TORTA*\n\n`;
-            messaggio += `📅 Data: ${dataFormattata}\n`;
+            let messaggio = `*${giornoCapitalizzato} ${dataFormattata}*\n\n`;
+            messaggio += `🎂 *ORDINE TORTA*\n\n`;
             messaggio += `👤 Cliente: ${nome} ${cognome}\n`;
             messaggio += `📞 Telefono: ${telefono}\n\n`;
             messaggio += `--- DETTAGLI TORTA ---\n`;
@@ -463,6 +540,8 @@
                 messaggio += `✍️ Scritta: "${scritta}"\n`;
             }
             
+            messaggio += `\n👤 Operatore: ${operatore}`;
+            
             // Pulisci numero telefono (rimuovi spazi, trattini, ecc.)
             const telefonoClean = telefono.replace(/[\s\-\(\)]/g, '');
             
@@ -471,7 +550,7 @@
             
             // Copia il messaggio negli appunti
             navigator.clipboard.writeText(messaggio).then(() => {
-                console.log('Messaggio copiato negli appunti');
+                console.log('✅ Messaggio copiato negli appunti');
             }).catch(err => {
                 console.log('Errore copia appunti:', err);
             });
@@ -479,19 +558,43 @@
             // Link WhatsApp cliente
             const whatsappCliente = `https://wa.me/${telefonoClean}?text=${messaggioCodificato}`;
             
-            // Apri WhatsApp al cliente
-            const clienteWindow = window.open(whatsappCliente, '_blank');
+            // Link gruppo WhatsApp
+            const whatsappGruppo = 'https://chat.whatsapp.com/K4LVkZ6bO65CjLsEgzShfM';
             
-            // Chiedi conferma prima di aprire il gruppo
+            // Apri entrambe le chat contemporaneamente
+            window.open(whatsappCliente, '_blank');
+            
+            // Attendi 500ms e apri il gruppo
             setTimeout(() => {
-                const conferma = confirm('✅ Messaggio inviato al cliente!\n\n📋 Il messaggio è stato copiato negli appunti.\n\nVuoi aprire il gruppo WhatsApp per incollarlo?');
+                window.open(whatsappGruppo, '_blank');
                 
-                if (conferma) {
-                    // Apri il gruppo WhatsApp
-                    window.open('https://chat.whatsapp.com/K4LVkZ6bO65CjLsEgzShfM', '_blank');
-                }
-            }, 1500);
+                // Mostra istruzioni
+                setTimeout(() => {
+                    alert('✅ Chat aperte!\n\n1️⃣ Invia il messaggio al cliente (già scritto)\n2️⃣ Nel gruppo: Incolla (Ctrl+V) e invia\n\n💡 Il messaggio è già copiato!');
+                }, 1000);
+            }, 500);
         });
+        
+        // Funzione per salvare nel Google Sheet
+        function saveToGoogleSheet(data) {
+            // URL dello script Google Apps (lo configureremo)
+            const scriptURL = 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec';
+            
+            fetch(scriptURL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(() => {
+                console.log('✅ Ordine salvato nel Google Sheet');
+            })
+            .catch(error => {
+                console.error('❌ Errore salvataggio:', error);
+            });
+        }
     </script>
 </body>
 </html>
