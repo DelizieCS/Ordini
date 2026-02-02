@@ -383,7 +383,7 @@
                 </button>
                 
                 <p style="text-align: center; color: #666; font-size: 13px; margin-top: 10px;">
-                    Email al cliente • Copia su WhatsApp gruppo
+                    Email automatica al cliente • Copia manuale su gruppo WhatsApp
                 </p>
             </form>
         </div>
@@ -633,33 +633,24 @@
             // Codifica messaggio per URL
             const messaggioCodificato = encodeURIComponent(messaggio);
             
-            // Copia il messaggio negli appunti
-            navigator.clipboard.writeText(messaggio).then(() => {
-                console.log('✅ Messaggio copiato negli appunti');
-            }).catch(err => {
-                console.log('Errore copia appunti:', err);
-            });
+            // Prova con API WhatsApp usando l'ID del gruppo
+            // Estrai l'ID dal link di invito
+            const gruppoID = 'K4LVkZ6bO65CjLsEgzShfM';
             
-            // Crea email per il cliente
-            const oggettoEmail = `Conferma Ordine Torta - ${nome} ${cognome}`;
-            const corpoEmail = messaggio.replace(/\*/g, ''); // Rimuovi grassetto per email
-            const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(oggettoEmail)}&body=${encodeURIComponent(corpoEmail)}`;
+            // Tentativo 1: API diretta con testo
+            const whatsappAPI = `https://api.whatsapp.com/send?phone=&text=${messaggioCodificato}`;
             
-            // Link gruppo WhatsApp
-            const whatsappGruppo = 'https://chat.whatsapp.com/K4LVkZ6bO65CjLsEgzShfM';
+            // Apri WhatsApp con il messaggio
+            window.open(whatsappAPI, '_blank');
             
-            // Apri client email per il cliente
-            window.open(mailtoLink, '_blank');
-            
-            // Attendi 500ms e apri il gruppo WhatsApp
+            // Dopo 1 secondo, apri il gruppo
             setTimeout(() => {
-                window.open(whatsappGruppo, '_blank');
+                window.open('https://chat.whatsapp.com/K4LVkZ6bO65CjLsEgzShfM', '_blank');
                 
-                // Mostra istruzioni
                 setTimeout(() => {
-                    alert('✅ Client email aperto!\n\n1️⃣ Invia l\'email al cliente\n2️⃣ Nel gruppo WhatsApp: Incolla (Ctrl+V) e invia\n\n💡 Il messaggio è già copiato!');
+                    alert('📱 Istruzioni:\n\n1️⃣ Nella prima finestra: il messaggio è pronto\n2️⃣ Copia il messaggio (Ctrl+A, Ctrl+C)\n3️⃣ Nella seconda finestra: vai nel gruppo e incolla (Ctrl+V)\n4️⃣ Premi Invio\n\n✅ Email già inviata al cliente!');
                 }, 1000);
-            }, 500);
+            }, 1500);
         });
         
         // Funzione per salvare nel Google Sheet
