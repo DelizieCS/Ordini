@@ -367,7 +367,37 @@
                 
                 <div class="form-group">
                     <label for="oraRitiro">Ora Ritiro *</label>
-                    <input type="time" id="oraRitiro" required>
+                    <select id="oraRitiro" required>
+                        <option value="">-- Seleziona --</option>
+                        <option value="08:00">08:00</option>
+                        <option value="08:30">08:30</option>
+                        <option value="09:00">09:00</option>
+                        <option value="09:30">09:30</option>
+                        <option value="10:00">10:00</option>
+                        <option value="10:30">10:30</option>
+                        <option value="11:00">11:00</option>
+                        <option value="11:30">11:30</option>
+                        <option value="12:00">12:00</option>
+                        <option value="12:30">12:30</option>
+                        <option value="13:00">13:00</option>
+                        <option value="13:30">13:30</option>
+                        <option value="14:00">14:00</option>
+                        <option value="14:30">14:30</option>
+                        <option value="15:00">15:00</option>
+                        <option value="15:30">15:30</option>
+                        <option value="16:00">16:00</option>
+                        <option value="16:30">16:30</option>
+                        <option value="17:00">17:00</option>
+                        <option value="17:30">17:30</option>
+                        <option value="18:00">18:00</option>
+                        <option value="18:30">18:30</option>
+                        <option value="19:00">19:00</option>
+                        <option value="19:30">19:30</option>
+                        <option value="20:00">20:00</option>
+                        <option value="20:30">20:30</option>
+                        <option value="21:00">21:00</option>
+                        <option value="21:30">21:30</option>
+                    </select>
                 </div>
                 
                 <div class="form-group">
@@ -510,6 +540,10 @@
                     <!-- Campi condizionali Consegna -->
                     <div class="conditional-field" id="consegnaField">
                         <div style="margin-bottom: 10px;">
+                            <label for="comuneConsegna">Comune *</label>
+                            <input type="text" id="comuneConsegna" placeholder="Comune">
+                        </div>
+                        <div style="margin-bottom: 10px;">
                             <label for="viaConsegna">Via *</label>
                             <input type="text" id="viaConsegna" placeholder="Via/Piazza">
                         </div>
@@ -518,8 +552,8 @@
                             <input type="text" id="civicoConsegna" placeholder="N. civico">
                         </div>
                         <div>
-                            <label for="comuneConsegna">Comune *</label>
-                            <input type="text" id="comuneConsegna" placeholder="Comune">
+                            <label for="citofonoConsegna">Nome Citofono *</label>
+                            <input type="text" id="citofonoConsegna" placeholder="Nome sul citofono">
                         </div>
                     </div>
                 </div>
@@ -666,9 +700,10 @@
                 ritiroField.classList.remove('show');
                 
                 // Rendi i campi consegna required
+                document.getElementById('comuneConsegna').required = true;
                 document.getElementById('viaConsegna').required = true;
                 document.getElementById('civicoConsegna').required = true;
-                document.getElementById('comuneConsegna').required = true;
+                document.getElementById('citofonoConsegna').required = true;
                 
                 // Rimuovi required dai campi ritiro
                 document.querySelectorAll('input[name="sedeRitiro"]').forEach(radio => {
@@ -764,10 +799,11 @@
                 const sedeRitiro = document.querySelector('input[name="sedeRitiro"]:checked')?.value || '';
                 dettagliModalita = sedeRitiro;
             } else if (modalita === 'consegna') {
+                const comune = document.getElementById('comuneConsegna').value;
                 const via = document.getElementById('viaConsegna').value;
                 const civico = document.getElementById('civicoConsegna').value;
-                const comune = document.getElementById('comuneConsegna').value;
-                dettagliModalita = `${via}, ${civico} - ${comune}`;
+                const citofono = document.getElementById('citofonoConsegna').value;
+                dettagliModalita = `${comune} - ${via}, ${civico} (Citofono: ${citofono})`;
             }
             
             const operatore = document.getElementById('operatore').value;
