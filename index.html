@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ordini Pasticceria</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,7 +15,7 @@
         }
         
         body {
-            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: #000000;
             min-height: 100vh;
             padding: 20px;
@@ -77,7 +80,7 @@
             font-size: 18px;
             font-weight: 600;
             color: #333;
-            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
         
         /* Form ordine */
@@ -164,6 +167,17 @@
             border-radius: 8px;
         }
         
+        .conditional-field input[type="text"] {
+            font-size: 16px;
+            padding: 14px;
+            font-weight: 500;
+        }
+        
+        .conditional-field label {
+            font-size: 15px;
+            font-weight: 600;
+        }
+        
         .conditional-field.show {
             display: block;
         }
@@ -208,6 +222,64 @@
         
         .whatsapp-icon {
             margin-right: 8px;
+        }
+        
+        /* Toggle Switch */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 26px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: #27ae60;
+        }
+        
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+        
+        .toggle-label {
+            font-weight: 700;
+            color: #333;
+            cursor: pointer;
         }
         
         @media (max-width: 480px) {
@@ -346,7 +418,27 @@
                 <!-- Campo condizionale: Specifica (per Altro) -->
                 <div class="conditional-field" id="specificaField">
                     <label for="specifica">Specifica Tipo Torta *</label>
-                    <input type="text" id="specifica" placeholder="Descrivi il tipo di torta">
+                    <input type="text" id="specifica" placeholder="es. senza glutine">
+                </div>
+                
+                <div class="form-group">
+                    <label for="gusto">Gusto *</label>
+                    <select id="gusto" required onchange="handleGustoChange()">
+                        <option value="">-- Seleziona --</option>
+                        <option value="Chantilly con gocce di cioccolato">Chantilly con gocce di cioccolato</option>
+                        <option value="Chantilly con frutta">Chantilly con frutta</option>
+                        <option value="Crema Pasticcera">Crema Pasticcera</option>
+                        <option value="Cioccolato">Cioccolato</option>
+                        <option value="Nocciola">Nocciola</option>
+                        <option value="Pistacchio">Pistacchio</option>
+                        <option value="Altro">Altro</option>
+                    </select>
+                </div>
+                
+                <!-- Campo condizionale: Specifica Gusto (per Altro) -->
+                <div class="conditional-field" id="specificaGustoField">
+                    <label for="specificaGusto">Specifica Gusto *</label>
+                    <input type="text" id="specificaGusto" placeholder="Descrivi il gusto">
                 </div>
                 
                 <div class="form-group">
@@ -360,16 +452,71 @@
                 </div>
                 
                 <div class="form-group">
-                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                        <input type="checkbox" id="ostiaDisegno" style="width: auto; cursor: pointer;">
-                        Ostia con disegno (+10€ se ordinato con 48h di anticipo)
-                    </label>
-                    <p id="ostiaWarning" style="display: none; color: #e74c3c; font-size: 13px; margin-top: 8px; font-style: italic;">
-                        ⚠️ L'ostia con disegno richiede almeno 48 ore di anticipo. Costo aggiuntivo: 10€
+                    <div class="toggle-container">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="ostiaDisegno" onchange="checkOstiaAvailability()">
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <label for="ostiaDisegno" class="toggle-label">
+                            Ostia con disegno (ha un costo di +10€ e deve essere ordinata con 48h di anticipo)
+                        </label>
+                    </div>
+                    <p id="ostiaWarning" style="display: none; color: #27ae60; font-size: 13px; margin-top: 8px; font-style: italic;">
+                        ✅ Ordinato con almeno 48 ore di anticipo. Costo aggiuntivo: 10€
                     </p>
                     <p id="ostiaNotAvailable" style="display: none; color: #e74c3c; font-size: 13px; margin-top: 8px; font-style: italic;">
                         ⚠️ Attenzione: mancano meno di 48 ore. L'ostia con disegno potrebbe non essere disponibile.
                     </p>
+                </div>
+                
+                <!-- RITIRO / CONSEGNA -->
+                <div class="form-group">
+                    <label style="font-weight: 700; margin-bottom: 10px; display: block; font-size: 18px;">Modalità *</label>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 600; font-size: 16px;">
+                            <input type="radio" name="modalita" value="ritiro" id="ritiroRadio" onchange="handleModalitaChange()" required style="width: auto;">
+                            Ritiro
+                        </label>
+                    </div>
+                    
+                    <!-- Campi condizionali Ritiro -->
+                    <div class="conditional-field" id="ritiroField">
+                        <label>Sede di Ritiro *</label>
+                        <div class="radio-group" style="flex-direction: column; gap: 10px;">
+                            <label>
+                                <input type="radio" name="sedeRitiro" value="Corso Mazzini">
+                                Corso Mazzini
+                            </label>
+                            <label>
+                                <input type="radio" name="sedeRitiro" value="Settimo di Montalto">
+                                Settimo di Montalto
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 600; font-size: 16px;">
+                            <input type="radio" name="modalita" value="consegna" id="consegnaRadio" onchange="handleModalitaChange()" required style="width: auto;">
+                            Consegna
+                        </label>
+                    </div>
+                    
+                    <!-- Campi condizionali Consegna -->
+                    <div class="conditional-field" id="consegnaField">
+                        <div style="margin-bottom: 10px;">
+                            <label for="viaConsegna">Via *</label>
+                            <input type="text" id="viaConsegna" placeholder="Via/Piazza">
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <label for="civicoConsegna">Numero Civico *</label>
+                            <input type="text" id="civicoConsegna" placeholder="N. civico">
+                        </div>
+                        <div>
+                            <label for="comuneConsegna">Comune *</label>
+                            <input type="text" id="comuneConsegna" placeholder="Comune">
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="form-group">
@@ -474,12 +621,86 @@
             }
         }
         
+        // Funzione per gestire Gusto
+        function handleGustoChange() {
+            const gusto = document.getElementById('gusto').value;
+            const specificaGustoField = document.getElementById('specificaGustoField');
+            
+            if (gusto === 'Altro') {
+                specificaGustoField.classList.add('show');
+                document.getElementById('specificaGusto').required = true;
+            } else {
+                specificaGustoField.classList.remove('show');
+                document.getElementById('specificaGusto').required = false;
+            }
+        }
+        
+        // Funzione per gestire Ritiro/Consegna
+        function handleModalitaChange() {
+            const ritiroRadio = document.getElementById('ritiroRadio');
+            const consegnaRadio = document.getElementById('consegnaRadio');
+            const ritiroField = document.getElementById('ritiroField');
+            const consegnaField = document.getElementById('consegnaField');
+            
+            if (ritiroRadio.checked) {
+                ritiroField.classList.add('show');
+                consegnaField.classList.remove('show');
+                
+                // Rendi i campi ritiro required
+                document.querySelectorAll('input[name="sedeRitiro"]').forEach(radio => {
+                    radio.required = true;
+                });
+                
+                // Rimuovi required dai campi consegna
+                document.getElementById('viaConsegna').required = false;
+                document.getElementById('civicoConsegna').required = false;
+                document.getElementById('comuneConsegna').required = false;
+                
+            } else if (consegnaRadio.checked) {
+                consegnaField.classList.add('show');
+                ritiroField.classList.remove('show');
+                
+                // Rendi i campi consegna required
+                document.getElementById('viaConsegna').required = true;
+                document.getElementById('civicoConsegna').required = true;
+                document.getElementById('comuneConsegna').required = true;
+                
+                // Rimuovi required dai campi ritiro
+                document.querySelectorAll('input[name="sedeRitiro"]').forEach(radio => {
+                    radio.required = false;
+                });
+            }
+        }
+        
         // Funzione per controllare le 48 ore per l'ostia
         function checkOstiaAvailability() {
             const dataOrdine = document.getElementById('data').value;
             const ostiaCheckbox = document.getElementById('ostiaDisegno');
             const ostiaWarning = document.getElementById('ostiaWarning');
             const ostiaNotAvailable = document.getElementById('ostiaNotAvailable');
+            const pesoInput = document.getElementById('peso');
+            
+            // Se il toggle è stato attivato, controlla il peso
+            if (ostiaCheckbox.checked) {
+                const peso = parseFloat(pesoInput.value);
+                
+                // Se il peso è minore di 1.5kg o non valido, mostra popup e aggiornalo
+                if (isNaN(peso) || peso < 1.5) {
+                    // Mostra popup con informazione
+                    alert('ℹ️ L\'ostia è applicabile solo a torte con peso uguale o maggiore a 1,5kg');
+                    
+                    // Aggiorna il peso a 1.5
+                    pesoInput.value = '1.5';
+                    
+                    // Evidenzia temporaneamente il campo peso
+                    pesoInput.style.borderColor = '#27ae60';
+                    pesoInput.style.borderWidth = '3px';
+                    setTimeout(() => {
+                        pesoInput.style.borderColor = '#e0e0e0';
+                        pesoInput.style.borderWidth = '2px';
+                    }, 2000);
+                }
+            }
             
             if (!dataOrdine || !ostiaCheckbox.checked) {
                 ostiaWarning.style.display = 'none';
@@ -524,9 +745,25 @@
             const email = document.getElementById('email').value;
             const peso = document.getElementById('peso').value;
             const tipoTorta = document.getElementById('tipoTorta').value;
+            const gusto = document.getElementById('gusto').value;
             const colore = document.getElementById('colore').value;
             const scritta = document.getElementById('scritta').value;
             const ostiaDisegno = document.getElementById('ostiaDisegno').checked;
+            
+            // Raccolta dati Ritiro/Consegna
+            const modalita = document.querySelector('input[name="modalita"]:checked')?.value || '';
+            let dettagliModalita = '';
+            
+            if (modalita === 'ritiro') {
+                const sedeRitiro = document.querySelector('input[name="sedeRitiro"]:checked')?.value || '';
+                dettagliModalita = sedeRitiro;
+            } else if (modalita === 'consegna') {
+                const via = document.getElementById('viaConsegna').value;
+                const civico = document.getElementById('civicoConsegna').value;
+                const comune = document.getElementById('comuneConsegna').value;
+                dettagliModalita = `${via}, ${civico} - ${comune}`;
+            }
+            
             const operatore = document.getElementById('operatore').value;
             
             // Calcola se l'ostia ha costo aggiuntivo (48h di anticipo)
@@ -553,6 +790,7 @@
             // Gestione campi condizionali
             let bagna = '';
             let specifica = '';
+            let specificaGusto = '';
             
             if (tipoTorta === 'Pan di spagna') {
                 const bagnaRadio = document.querySelector('input[name="bagna"]:checked');
@@ -561,6 +799,10 @@
                 }
             } else if (tipoTorta === 'Altro') {
                 specifica = document.getElementById('specifica').value;
+            }
+            
+            if (gusto === 'Altro') {
+                specificaGusto = document.getElementById('specificaGusto').value;
             }
             
             // Formatta data in italiano con giorno della settimana
@@ -588,10 +830,14 @@
                 tipoTorta: tipoTorta,
                 bagna: bagna,
                 specifica: specifica,
+                gusto: gusto,
+                specificaGusto: specificaGusto,
                 colore: colore,
                 scritta: scritta,
                 ostiaDisegno: ostiaInfo,
                 costoOstia: costoOstia,
+                modalita: modalita,
+                dettagliModalita: dettagliModalita,
                 operatore: operatore
             };
             
@@ -616,6 +862,8 @@
                 messaggio += `📝 Specifica: ${specifica}\n`;
             }
             
+            messaggio += `🎂 Gusto: ${gusto === 'Altro' ? specificaGusto : gusto}\n`;
+            
             if (colore) {
                 messaggio += `🎨 Colore: ${colore}\n`;
             }
@@ -628,6 +876,7 @@
                 messaggio += `🎨 Ostia con disegno: ${ostiaInfo}\n`;
             }
             
+            messaggio += `\n📍 ${modalita === 'ritiro' ? 'RITIRO' : 'CONSEGNA'}: ${dettagliModalita}\n`;
             messaggio += `\n👤 Operatore: ${operatore}`;
             
             // Codifica messaggio per URL
