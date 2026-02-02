@@ -655,22 +655,29 @@
         
         // Funzione per salvare nel Google Sheet
         function saveToGoogleSheet(data) {
-            // URL dello script Google Apps (lo configureremo)
-            const scriptURL = 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec';
+            // URL dello script Google Apps
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbwV1heHuz-NkG24Mns2z3oQsnkamcsp-2lb5gKZUQ7KjwyLo-ff1G3P7DKQ_Dv41m05/exec';
+            
+            console.log('📤 Invio dati allo script:', data);
             
             fetch(scriptURL, {
                 method: 'POST',
-                mode: 'no-cors',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: JSON.stringify(data)
             })
-            .then(() => {
-                console.log('✅ Ordine salvato nel Google Sheet');
+            .then(response => {
+                console.log('📥 Risposta ricevuta:', response);
+                return response.text();
+            })
+            .then(text => {
+                console.log('✅ Risposta testo:', text);
+                alert('✅ Ordine salvato!\n\nControlla il foglio Google e l\'email del cliente.');
             })
             .catch(error => {
                 console.error('❌ Errore salvataggio:', error);
+                alert('❌ Errore nel salvataggio. Controlla la console (F12).');
             });
         }
     </script>
