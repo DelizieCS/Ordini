@@ -103,7 +103,7 @@
         }
         
         .form-header h2 {
-            color: #667eea;
+            color: #000000;
             font-size: 22px;
         }
         
@@ -129,7 +129,7 @@
             display: block;
             margin-bottom: 8px;
             color: #333;
-            font-weight: 500;
+            font-weight: 700;
             font-size: 14px;
         }
         
@@ -309,6 +309,11 @@
                 </div>
                 
                 <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" placeholder="cliente@example.com" required>
+                </div>
+                
+                <div class="form-group">
                     <label for="peso">Peso (kg) *</label>
                     <input type="text" id="peso" placeholder="es. 1.5" required>
                 </div>
@@ -355,17 +360,30 @@
                 </div>
                 
                 <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                        <input type="checkbox" id="ostiaDisegno" style="width: auto; cursor: pointer;">
+                        Ostia con disegno (+10€ se ordinato con 48h di anticipo)
+                    </label>
+                    <p id="ostiaWarning" style="display: none; color: #e74c3c; font-size: 13px; margin-top: 8px; font-style: italic;">
+                        ⚠️ L'ostia con disegno richiede almeno 48 ore di anticipo. Costo aggiuntivo: 10€
+                    </p>
+                    <p id="ostiaNotAvailable" style="display: none; color: #e74c3c; font-size: 13px; margin-top: 8px; font-style: italic;">
+                        ⚠️ Attenzione: mancano meno di 48 ore. L'ostia con disegno potrebbe non essere disponibile.
+                    </p>
+                </div>
+                
+                <div class="form-group">
                     <label for="operatore">Operatore *</label>
                     <input type="text" id="operatore" placeholder="Nome operatore" required>
                 </div>
                 
                 <button type="submit" class="submit-btn">
-                    <span class="whatsapp-icon">📱</span>
+                    <span class="whatsapp-icon">📧</span>
                     Invia Ordine
                 </button>
                 
                 <p style="text-align: center; color: #666; font-size: 13px; margin-top: 10px;">
-                    Il messaggio verrà inviato al cliente e al gruppo
+                    Email al cliente • Copia su WhatsApp gruppo
                 </p>
             </form>
         </div>
@@ -456,6 +474,45 @@
             }
         }
         
+        // Funzione per controllare le 48 ore per l'ostia
+        function checkOstiaAvailability() {
+            const dataOrdine = document.getElementById('data').value;
+            const ostiaCheckbox = document.getElementById('ostiaDisegno');
+            const ostiaWarning = document.getElementById('ostiaWarning');
+            const ostiaNotAvailable = document.getElementById('ostiaNotAvailable');
+            
+            if (!dataOrdine || !ostiaCheckbox.checked) {
+                ostiaWarning.style.display = 'none';
+                ostiaNotAvailable.style.display = 'none';
+                return;
+            }
+            
+            const dataOrdineObj = new Date(dataOrdine);
+            const oggi = new Date();
+            oggi.setHours(0, 0, 0, 0);
+            dataOrdineObj.setHours(0, 0, 0, 0);
+            
+            // Calcola differenza in millisecondi
+            const diffTime = dataOrdineObj - oggi;
+            const diffDays = diffTime / (1000 * 60 * 60 * 24);
+            
+            if (diffDays >= 2) {
+                // Almeno 48 ore di anticipo - mostra che costa 10€
+                ostiaWarning.style.display = 'block';
+                ostiaNotAvailable.style.display = 'none';
+            } else {
+                // Meno di 48 ore - avvisa che potrebbe non essere disponibile
+                ostiaWarning.style.display = 'none';
+                ostiaNotAvailable.style.display = 'block';
+            }
+        }
+        
+        // Aggiungi event listeners per data e checkbox ostia
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('data').addEventListener('change', checkOstiaAvailability);
+            document.getElementById('ostiaDisegno').addEventListener('change', checkOstiaAvailability);
+        });
+        
         // Handler submit form Torte
         document.getElementById('torteForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -464,11 +521,34 @@
             const nome = document.getElementById('nome').value;
             const cognome = document.getElementById('cognome').value;
             const telefono = document.getElementById('telefono').value;
+            const email = document.getElementById('email').value;
             const peso = document.getElementById('peso').value;
             const tipoTorta = document.getElementById('tipoTorta').value;
             const colore = document.getElementById('colore').value;
             const scritta = document.getElementById('scritta').value;
+            const ostiaDisegno = document.getElementById('ostiaDisegno').checked;
             const operatore = document.getElementById('operatore').value;
+            
+            // Calcola se l'ostia ha costo aggiuntivo (48h di anticipo)
+            let costoOstia = 0;
+            let ostiaInfo = '';
+            
+            if (ostiaDisegno) {
+                const dataOrdineObj = new Date(data);
+                const oggi = new Date();
+                oggi.setHours(0, 0, 0, 0);
+                dataOrdineObj.setHours(0, 0, 0, 0);
+                
+                const diffTime = dataOrdineObj - oggi;
+                const diffDays = diffTime / (1000 * 60 * 60 * 24);
+                
+                if (diffDays >= 2) {
+                    costoOstia = 10;
+                    ostiaInfo = 'Sì (+10€)';
+                } else {
+                    ostiaInfo = 'Sì (NON disponibile - meno di 48h)';
+                }
+            }
             
             // Gestione campi condizionali
             let bagna = '';
@@ -503,12 +583,15 @@
                 nome: nome,
                 cognome: cognome,
                 telefono: telefono,
+                email: email,
                 peso: peso,
                 tipoTorta: tipoTorta,
                 bagna: bagna,
                 specifica: specifica,
                 colore: colore,
                 scritta: scritta,
+                ostiaDisegno: ostiaInfo,
+                costoOstia: costoOstia,
                 operatore: operatore
             };
             
@@ -519,7 +602,8 @@
             let messaggio = `*${giornoCapitalizzato} ${dataFormattata}*\n\n`;
             messaggio += `🎂 *ORDINE TORTA*\n\n`;
             messaggio += `👤 Cliente: ${nome} ${cognome}\n`;
-            messaggio += `📞 Telefono: ${telefono}\n\n`;
+            messaggio += `📞 Telefono: ${telefono}\n`;
+            messaggio += `📧 Email: ${email}\n\n`;
             messaggio += `--- DETTAGLI TORTA ---\n`;
             messaggio += `⚖️ Peso: ${peso} kg\n`;
             messaggio += `🍰 Tipo: ${tipoTorta}\n`;
@@ -540,10 +624,11 @@
                 messaggio += `✍️ Scritta: "${scritta}"\n`;
             }
             
-            messaggio += `\n👤 Operatore: ${operatore}`;
+            if (ostiaDisegno) {
+                messaggio += `🎨 Ostia con disegno: ${ostiaInfo}\n`;
+            }
             
-            // Pulisci numero telefono (rimuovi spazi, trattini, ecc.)
-            const telefonoClean = telefono.replace(/[\s\-\(\)]/g, '');
+            messaggio += `\n👤 Operatore: ${operatore}`;
             
             // Codifica messaggio per URL
             const messaggioCodificato = encodeURIComponent(messaggio);
@@ -555,22 +640,24 @@
                 console.log('Errore copia appunti:', err);
             });
             
-            // Link WhatsApp cliente
-            const whatsappCliente = `https://wa.me/${telefonoClean}?text=${messaggioCodificato}`;
+            // Crea email per il cliente
+            const oggettoEmail = `Conferma Ordine Torta - ${nome} ${cognome}`;
+            const corpoEmail = messaggio.replace(/\*/g, ''); // Rimuovi grassetto per email
+            const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(oggettoEmail)}&body=${encodeURIComponent(corpoEmail)}`;
             
             // Link gruppo WhatsApp
             const whatsappGruppo = 'https://chat.whatsapp.com/K4LVkZ6bO65CjLsEgzShfM';
             
-            // Apri entrambe le chat contemporaneamente
-            window.open(whatsappCliente, '_blank');
+            // Apri client email per il cliente
+            window.open(mailtoLink, '_blank');
             
-            // Attendi 500ms e apri il gruppo
+            // Attendi 500ms e apri il gruppo WhatsApp
             setTimeout(() => {
                 window.open(whatsappGruppo, '_blank');
                 
                 // Mostra istruzioni
                 setTimeout(() => {
-                    alert('✅ Chat aperte!\n\n1️⃣ Invia il messaggio al cliente (già scritto)\n2️⃣ Nel gruppo: Incolla (Ctrl+V) e invia\n\n💡 Il messaggio è già copiato!');
+                    alert('✅ Client email aperto!\n\n1️⃣ Invia l\'email al cliente\n2️⃣ Nel gruppo WhatsApp: Incolla (Ctrl+V) e invia\n\n💡 Il messaggio è già copiato!');
                 }, 1000);
             }, 500);
         });
