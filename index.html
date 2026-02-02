@@ -361,8 +361,13 @@
             
             <form id="torteForm">
                 <div class="form-group">
-                    <label for="data">Data Ordine *</label>
+                    <label for="data">Data Ritiro *</label>
                     <input type="date" id="data" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="oraRitiro">Ora Ritiro *</label>
+                    <input type="time" id="oraRitiro" required>
                 </div>
                 
                 <div class="form-group">
@@ -739,6 +744,7 @@
             e.preventDefault();
             
             const data = document.getElementById('data').value;
+            const oraRitiro = document.getElementById('oraRitiro').value;
             const nome = document.getElementById('nome').value;
             const cognome = document.getElementById('cognome').value;
             const telefono = document.getElementById('telefono').value;
@@ -822,6 +828,7 @@
                 timestamp: new Date().toLocaleString('it-IT'),
                 categoria: 'Torte',
                 data: dataFormattata,
+                oraRitiro: oraRitiro,
                 nome: nome,
                 cognome: cognome,
                 telefono: telefono,
@@ -845,7 +852,8 @@
             saveToGoogleSheet(orderData);
             
             // Crea messaggio WhatsApp
-            let messaggio = `*${giornoCapitalizzato} ${dataFormattata}*\n\n`;
+            let messaggio = `*${giornoCapitalizzato} ${dataFormattata}*\n`;
+            messaggio += `🕐 Ora Ritiro: ${oraRitiro}\n\n`;
             messaggio += `🎂 *ORDINE TORTA*\n\n`;
             messaggio += `👤 Cliente: ${nome} ${cognome}\n`;
             messaggio += `📞 Telefono: ${telefono}\n`;
@@ -876,7 +884,16 @@
                 messaggio += `🎨 Ostia con disegno: ${ostiaInfo}\n`;
             }
             
-            messaggio += `\n📍 ${modalita === 'ritiro' ? 'RITIRO' : 'CONSEGNA'}: ${dettagliModalita}\n`;
+            // Box visivo se è consegna
+            if (modalita === 'consegna') {
+                messaggio += `\n╔═══════════════════╗\n`;
+                messaggio += `   📍 *CONSEGNA*\n`;
+                messaggio += `   ${dettagliModalita}\n`;
+                messaggio += `╚═══════════════════╝\n`;
+            } else {
+                messaggio += `\n📍 RITIRO: ${dettagliModalita}\n`;
+            }
+            
             messaggio += `\n👤 Operatore: ${operatore}`;
             
             // Codifica messaggio per URL
